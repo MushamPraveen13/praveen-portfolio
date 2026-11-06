@@ -201,53 +201,7 @@ function App(){
       entries.forEach(entry=>{if(entry.isIntersecting) setActive(entry.target.id);});
     },{rootMargin:"-35% 0px -55% 0px"});
     sections.forEach(id=>{const el=document.getElementById(id); if(el) observer.observe(el);});
-
-    // Reveal content in cinematic, staggered beats as each section enters the viewport.
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const revealTargets = document.querySelectorAll(
-      ".section-heading, .about-photo-wrap, .about-content, .skills-intro, .skill-group, .timeline-item, .project-card, .education-main, .campus-gallery, .cert-summary, .cert-card, .contact-copy, .contact-form"
-    );
-    revealTargets.forEach((el, index) => {
-      el.dataset.reveal = "true";
-      el.style.setProperty("--reveal-delay", `${(index % 4) * 85}ms`);
-      if (reduceMotion) el.classList.add("is-visible");
-    });
-    const revealObserver = reduceMotion ? null : new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: "0px 0px -7% 0px" });
-    if (revealObserver) revealTargets.forEach(el => revealObserver.observe(el));
-
-    let scrollFrame = 0;
-    const updateScrollMotion = () => {
-      if (scrollFrame) return;
-      scrollFrame = requestAnimationFrame(() => {
-        scrollFrame = 0;
-        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
-        document.documentElement.style.setProperty("--page-progress", `${progress * 100}%`);
-        document.querySelectorAll(".section-pad").forEach(section => {
-          const rect = section.getBoundingClientRect();
-          const travel = Math.max(1, window.innerHeight + rect.height);
-          const localProgress = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / travel));
-          section.style.setProperty("--section-progress", localProgress.toFixed(3));
-        });
-      });
-    };
-    updateScrollMotion();
-    window.addEventListener("scroll", updateScrollMotion, { passive: true });
-    window.addEventListener("resize", updateScrollMotion);
-    return ()=>{
-      observer.disconnect();
-      revealObserver?.disconnect();
-      cancelAnimationFrame(scrollFrame);
-      window.removeEventListener("scroll", updateScrollMotion);
-      window.removeEventListener("resize", updateScrollMotion);
-    };
+    return ()=>observer.disconnect();
   },[dark]);
 
   const nav = ["Home","About","Skills","Experience","Projects","Education","Certifications","Contact"];
@@ -262,7 +216,6 @@ function App(){
   };
 
   return <div className="site-shell">
-    <div className="page-progress" aria-hidden="true"><span /></div>
     <header className="topbar">
       <a className="brand" href="#home" onClick={()=>go("home")}><span className="brand-mark">PM</span><span>PRAVEEN<span className="brand-dot">.</span></span></a>
       <nav className={menu?"nav-links open":"nav-links"}>{nav.map(n=><button key={n} className={active===n.toLowerCase()?"nav-item active":"nav-item"} onClick={()=>go(n)}>{n}</button>)}</nav>
