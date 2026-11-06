@@ -3,10 +3,27 @@ import { createRoot } from "react-dom/client";
 import {
   ArrowDown, ArrowRight, ArrowUpRight, Award, BriefcaseBusiness, Check,
   ChevronDown, Code2, Database, Download, ExternalLink, FileText, Github,
-  GraduationCap, Linkedin, Mail, MapPin, Menu, Moon, Network, Sun, X,
+  GraduationCap, Mail, MapPin, Menu, Moon, Network, Sun, X,
   BrainCircuit, ChartNoAxesCombined, Cpu, Sparkles, Workflow, Eye
 } from "lucide-react";
 import "./style.css";
+
+
+function LinkedInIcon({ size = 17, ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H7.119V9h3.414v1.561h.049c.476-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
+  );
+}
 
 const A = "/assets";
 const profile = `${A}/images/profile-photo.png`;
@@ -140,7 +157,7 @@ function App(){
               <Fact icon={ChartNoAxesCombined} label="Strength" value="Analytical thinking"/>
               <Fact icon={Workflow} label="Exposure" value="CRM & operations"/>
             </div>
-            <div className="social-row"><a href="https://www.linkedin.com/in/praveen-musham-502b73294" target="_blank" rel="noreferrer"><Linkedin size={17}/> LinkedIn <ArrowUpRight size={14}/></a><a href="https://github.com/MushamPraveen13" target="_blank" rel="noreferrer"><Github size={17}/> GitHub <ArrowUpRight size={14}/></a></div>
+            <div className="social-row"><a href="https://www.linkedin.com/in/praveen-musham-502b73294" target="_blank" rel="noreferrer"><LinkedInIcon size={17}/> LinkedIn <ArrowUpRight size={14}/></a><a href="https://github.com/MushamPraveen13" target="_blank" rel="noreferrer"><Github size={17}/> GitHub <ArrowUpRight size={14}/></a></div>
           </div>
         </div>
       </section>
@@ -187,12 +204,12 @@ function App(){
       </section>
 
       <section className="section-wrap section-pad contact-section" id="contact">
-        <div className="contact-panel"><div className="contact-copy"><div className="eyebrow"><span className="pulse"></span> LET’S CONNECT</div><h2>Have an opportunity<br/>or an idea? <span className="gradient-text">Let’s talk.</span></h2><p>I’m open to connecting with recruiters, technology professionals, and teams working across AI, data, analytics, and business technology.</p><div className="contact-details"><a href="mailto:mushampraveen1@gmail.com"><Mail size={17}/>mushampraveen1@gmail.com<ArrowUpRight size={14}/></a><span><MapPin size={17}/>Hyderabad, Telangana, India</span><a href="https://www.linkedin.com/in/praveen-musham-502b73294" target="_blank" rel="noreferrer"><Linkedin size={17}/>LinkedIn profile<ArrowUpRight size={14}/></a></div></div>
+        <div className="contact-panel"><div className="contact-copy"><div className="eyebrow"><span className="pulse"></span> LET’S CONNECT</div><h2>Have an opportunity<br/>or an idea? <span className="gradient-text">Let’s talk.</span></h2><p>I’m open to connecting with recruiters, technology professionals, and teams working across AI, data, analytics, and business technology.</p><div className="contact-details"><a href="mailto:mushampraveen1@gmail.com"><Mail size={17}/>mushampraveen1@gmail.com<ArrowUpRight size={14}/></a><span><MapPin size={17}/>Hyderabad, Telangana, India</span><a href="https://www.linkedin.com/in/praveen-musham-502b73294" target="_blank" rel="noreferrer"><LinkedInIcon size={17}/>LinkedIn profile<ArrowUpRight size={14}/></a></div></div>
           <form className="contact-form" onSubmit={submit}><div className="form-heading">Send a message <span>I'll be glad to connect.</span></div><label>Your name<input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Name"/></label><label>Email address<input required type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} placeholder="you@example.com"/></label><label>Subject<input required value={form.subject} onChange={e=>setForm({...form,subject:e.target.value})} placeholder="What would you like to discuss?"/></label><label>Message<textarea required rows="4" value={form.message} onChange={e=>setForm({...form,message:e.target.value})} placeholder="Write your message..."/></label><button className="btn btn-primary form-submit" type="submit">Open email to send <ArrowUpRight size={16}/></button><small>The button opens your email application with your message prepared; it does not submit to a server.</small>{sent&&<span className="form-status">Your email application should open now.</span>}</form>
         </div>
       </section>
     </main>
-    <footer className="footer"><a className="brand" href="#home"><span className="brand-mark">PM</span><span>PRAVEEN<span className="brand-dot">.</span></span></a><p>Exploring intelligence. Building what’s next.</p><div className="footer-links"><a href="https://www.linkedin.com/in/praveen-musham-502b73294" target="_blank" rel="noreferrer"><Linkedin size={16}/></a><a href="https://github.com/MushamPraveen13" target="_blank" rel="noreferrer"><Github size={16}/></a><a href="mailto:mushampraveen1@gmail.com"><Mail size={16}/></a></div><span className="copyright">© 2026 PRAVEEN KUMAR MUSHAM · BUILT WITH PURPOSE</span></footer>
+    <footer className="footer"><a className="brand" href="#home"><span className="brand-mark">PM</span><span>PRAVEEN<span className="brand-dot">.</span></span></a><p>Exploring intelligence. Building what’s next.</p><div className="footer-links"><a href="https://www.linkedin.com/in/praveen-musham-502b73294" target="_blank" rel="noreferrer"><LinkedInIcon size={16}/></a><a href="https://github.com/MushamPraveen13" target="_blank" rel="noreferrer"><Github size={16}/></a><a href="mailto:mushampraveen1@gmail.com"><Mail size={16}/></a></div><span className="copyright">© 2026 PRAVEEN KUMAR MUSHAM · BUILT WITH PURPOSE</span></footer>
 
     {selected&&<div className="modal-backdrop" role="dialog" aria-modal="true" aria-label={selected.title} onClick={()=>setSelected(null)}><div className="certificate-modal" onClick={e=>e.stopPropagation()}><div className="modal-head"><div><span className="mini-label">{selected.category}</span><h3>{selected.title}</h3><p>{selected.issuer} · {selected.date}</p></div><button className="icon-btn" onClick={()=>setSelected(null)} aria-label="Close preview"><X/></button></div>{selected.file?<iframe title={selected.title} src={`${A}/certificates/${selected.file}#view=FitH`} />:<img className="modal-image" src={selected.image} alt={selected.title}/>}<div className="modal-foot"><span>Original uploaded certificate</span><a className="btn btn-primary" href={selected.file?`${A}/certificates/${selected.file}`:selected.image} target="_blank" rel="noreferrer" download={selected.image?"innomatics-machine-learning-workshop-certificate.jpg":undefined}><Download size={16}/> Open / Download</a></div></div></div>}
     {campus&&<div className="modal-backdrop" onClick={()=>setCampus(null)}><div className="image-modal" onClick={e=>e.stopPropagation()}><button className="icon-btn close-image" onClick={()=>setCampus(null)}><X/></button><img src={campus} alt="Methodist College campus photograph"/></div></div>}
