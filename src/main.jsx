@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import { createRoot } from "react-dom/client";
 import {
-  ArrowDown, ArrowRight, ArrowUpRight, Award, BriefcaseBusiness, Check,
-  ChevronDown, Code2, Database, Download, ExternalLink, FileText, Github,
-  GraduationCap, Linkedin, Mail, MapPin, Menu, Moon, Network, Sun, X,
-  BrainCircuit, ChartNoAxesCombined, Cpu, Sparkles, Workflow, Eye
+  ArrowDown, ArrowRight, ArrowUpRight, Award,
+  BriefcaseBusiness, Check, ChevronDown, Code2,
+  Database, Download, ExternalLink, FileText,
+  GraduationCap, Mail, MapPin, Menu, Moon,
+  Network, Sun, X, BrainCircuit,
+  ChartNoAxesCombined, Cpu, Sparkles, Workflow, Eye
 } from "lucide-react";
 import "./style.css";
 
