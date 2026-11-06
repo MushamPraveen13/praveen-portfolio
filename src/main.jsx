@@ -62,8 +62,7 @@ const experience = [
 const projects = [
   {num:"01",title:"LLVM-Based Object File Obfuscation Tool",type:"Compiler Technology · Cybersecurity",desc:"Explored compiler-level object file obfuscation through instruction substitution, control-flow alteration, and opaque predicates.",details:["Instruction substitution","Control-flow alteration","Opaque predicates","Compiler-related workflows"],stack:["LLVM","Compiler concepts","C/C++ concepts"],url:"https://github.com/MushamPraveen13/LLVM-Object-File-Obfuscation-Tool",symbol:"⟡"},
   {num:"02",title:"Disease Prediction Using Machine Learning",type:"Machine Learning · Classification",desc:"Developed a machine learning project using Logistic Regression and Decision Tree classification techniques, with a focus on preprocessing and model evaluation.",details:["Data preprocessing","Logistic Regression","Decision Tree classification","Model evaluation"],stack:["Python","Pandas","NumPy","Scikit-learn"],url:"https://github.com/MushamPraveen13/Disease_Prediction_Using_Machine_Learning",symbol:"⌘"},
-  {num:"03",title:"Line Follower Robot",type:"Embedded Systems · Robotics",desc:"Developed an Arduino-based line follower robot using IR sensors and motor control for sensor-based navigation.",details:["IR sensor integration","Motor control","Hardware integration","Testing and debugging"],stack:["Arduino","IR Sensors","Motor Control"],url:"https://github.com/MushamPraveen13/Line-Follower-Robot-Project",symbol:"⌁"},
-  {num:"04",title:"Virtual Bus Pass App",type:"Mobile Application · Lost & Found",desc:"Designed a mobile application to help commuters report lost and found items by connecting people who lost belongings with those who found them, featuring real-time notifications and claim matching.",details:["Lost and found reporting","Claim matching","Real-time notifications","Commuter connectivity"],stack:["Mobile Application","Notifications","Claim Matching"],url:"",symbol:"⌖"}
+  {num:"03",title:"Line Follower Robot",type:"Embedded Systems · Robotics",desc:"Developed an Arduino-based line follower robot using IR sensors and motor control for sensor-based navigation.",details:["IR sensor integration","Motor control","Hardware integration","Testing and debugging"],stack:["Arduino","IR Sensors","Motor Control"],url:"https://github.com/MushamPraveen13/Line-Follower-Robot-Project",symbol:"⌁"}
 ];
 const certificates = [
   {title:"Foundations of AI Internship",issuer:"Microsoft initiative · Edunet Foundation · AICTE",date:"10 May 2025",category:"Internships",file:"microsoft-edunet-foundations-of-ai-internship.pdf",note:"Four-week internship completion certificate."},
@@ -88,7 +87,7 @@ function NeuralScene(){
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduceMotion = false; // Keep the portfolio animation visible as requested.
     let width = 0, height = 0, frame = 0, raf = 0;
     let nodes = [];
     let pointer = { x: 0, y: 0 };
@@ -168,7 +167,7 @@ function NeuralScene(){
       ctx.globalCompositeOperation = "destination-over";
       ctx.fillStyle = halo; ctx.fillRect(0, 0, width, height);
       ctx.globalCompositeOperation = "source-over";
-      if (!reduceMotion) raf = requestAnimationFrame(render);
+      raf = requestAnimationFrame(render);
     };
 
     resize();
@@ -202,7 +201,53 @@ function App(){
       entries.forEach(entry=>{if(entry.isIntersecting) setActive(entry.target.id);});
     },{rootMargin:"-35% 0px -55% 0px"});
     sections.forEach(id=>{const el=document.getElementById(id); if(el) observer.observe(el);});
-    return ()=>observer.disconnect();
+
+    // Reveal content in cinematic, staggered beats as each section enters the viewport.
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const revealTargets = document.querySelectorAll(
+      ".section-heading, .about-photo-wrap, .about-content, .skills-intro, .skill-group, .timeline-item, .project-card, .education-main, .campus-gallery, .cert-summary, .cert-card, .contact-copy, .contact-form"
+    );
+    revealTargets.forEach((el, index) => {
+      el.dataset.reveal = "true";
+      el.style.setProperty("--reveal-delay", `${(index % 4) * 85}ms`);
+      if (reduceMotion) el.classList.add("is-visible");
+    });
+    const revealObserver = reduceMotion ? null : new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -7% 0px" });
+    if (revealObserver) revealTargets.forEach(el => revealObserver.observe(el));
+
+    let scrollFrame = 0;
+    const updateScrollMotion = () => {
+      if (scrollFrame) return;
+      scrollFrame = requestAnimationFrame(() => {
+        scrollFrame = 0;
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+        document.documentElement.style.setProperty("--page-progress", `${progress * 100}%`);
+        document.querySelectorAll(".section-pad").forEach(section => {
+          const rect = section.getBoundingClientRect();
+          const travel = Math.max(1, window.innerHeight + rect.height);
+          const localProgress = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / travel));
+          section.style.setProperty("--section-progress", localProgress.toFixed(3));
+        });
+      });
+    };
+    updateScrollMotion();
+    window.addEventListener("scroll", updateScrollMotion, { passive: true });
+    window.addEventListener("resize", updateScrollMotion);
+    return ()=>{
+      observer.disconnect();
+      revealObserver?.disconnect();
+      cancelAnimationFrame(scrollFrame);
+      window.removeEventListener("scroll", updateScrollMotion);
+      window.removeEventListener("resize", updateScrollMotion);
+    };
   },[dark]);
 
   const nav = ["Home","About","Skills","Experience","Projects","Education","Certifications","Contact"];
@@ -217,6 +262,7 @@ function App(){
   };
 
   return <div className="site-shell">
+    <div className="page-progress" aria-hidden="true"><span /></div>
     <header className="topbar">
       <a className="brand" href="#home" onClick={()=>go("home")}><span className="brand-mark">PM</span><span>PRAVEEN<span className="brand-dot">.</span></span></a>
       <nav className={menu?"nav-links open":"nav-links"}>{nav.map(n=><button key={n} className={active===n.toLowerCase()?"nav-item active":"nav-item"} onClick={()=>go(n)}>{n}</button>)}</nav>
@@ -238,7 +284,7 @@ function App(){
             <div className="hero-tags"><span>Machine Learning</span><span>Data Analytics</span><span>AI Technologies</span></div>
             <div className="hero-buttons">
               <button className="btn btn-primary" onClick={()=>go("projects")}>Explore my work <ArrowRight size={17}/></button>
-              <button className="btn btn-ghost" onClick={()=>go("contact")}>Get in touch <ArrowUpRight size={17}/></button><a className="btn btn-ghost" href={`${import.meta.env.BASE_URL}resume.pdf`} target="_blank" rel="noreferrer">View resume <FileText size={16}/></a><a className="btn btn-ghost" href={`${import.meta.env.BASE_URL}resume.pdf`} download="Praveen_Kumar_Musham_Resume.pdf">Download CV <Download size={16}/></a>
+              <button className="btn btn-ghost" onClick={()=>go("contact")}>Get in touch <ArrowUpRight size={17}/></button><a className="btn btn-ghost" href="/resume.html" target="_blank" rel="noreferrer">View resume <FileText size={16}/></a>
             </div>
             <div className="hero-meta"><span><MapPin size={15}/> Hyderabad, India</span><span className="meta-separator"></span><span className="availability"><i></i> Open to graduate opportunities</span></div>
           </div>
@@ -286,7 +332,7 @@ function App(){
 
       <section className="section-wrap section-pad" id="projects">
         <SectionHeading index="04" kicker="SELECTED WORK" title={<>Projects built through<br/><span className="gradient-text">experimentation.</span></>} desc="Academic and technical projects that helped me explore machine learning, compiler concepts, and hardware-based automation."/>
-        <div className="project-grid">{projects.map(p=><article className="project-card" key={p.num}><div className="project-top"><span className="project-number">{p.num} / PROJECT</span><span className="project-symbol">{p.symbol}</span></div><div className="project-type">{p.type}</div><h3>{p.title}</h3><p>{p.desc}</p><div className="project-details">{p.details.map(d=><span key={d}><Check size={13}/>{d}</span>)}</div><div className="stack-row">{p.stack.map(s=><span key={s}>{s}</span>)}</div><>{p.url?<a className="project-link" href={p.url} target="_blank" rel="noreferrer">Explore repository <ArrowUpRight size={16}/></a>:<span className="project-link">Project overview <FileText size={16}/></span>}</></article>)}</div>
+        <div className="project-grid">{projects.map(p=><article className="project-card" key={p.num}><div className="project-top"><span className="project-number">{p.num} / PROJECT</span><span className="project-symbol">{p.symbol}</span></div><div className="project-type">{p.type}</div><h3>{p.title}</h3><p>{p.desc}</p><div className="project-details">{p.details.map(d=><span key={d}><Check size={13}/>{d}</span>)}</div><div className="stack-row">{p.stack.map(s=><span key={s}>{s}</span>)}</div><a className="project-link" href={p.url} target="_blank" rel="noreferrer">Explore repository <ArrowUpRight size={16}/></a></article>)}</div>
       </section>
 
       <section className="section-wrap section-pad" id="education">
