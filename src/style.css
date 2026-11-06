@@ -2,3 +2,32 @@
 @media(max-width:1000px){.nav-links{gap:13px}.nav-item{font-size:10px}.hero-grid{gap:20px}.about-grid{gap:35px}.contact-panel{gap:30px;padding:35px}.project-grid{grid-template-columns:1fr 1fr}.cert-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.section-wrap{width:min(100% - 34px,560px)}.section-pad{padding-top:80px}.topbar{height:68px;padding:0 17px}.menu-btn{display:grid}.nav-cta{display:none}.nav-links{display:none;position:absolute;top:68px;left:0;right:0;background:var(--panel);border-bottom:1px solid var(--line);padding:12px 20px 20px;grid-template-columns:1fr 1fr;gap:5px}.nav-links.open{display:grid}.nav-item{text-align:left;padding:12px;font-size:12px}.nav-item.active:after{display:none}.hero{padding-top:55px;min-height:auto}.hero-grid{grid-template-columns:1fr}.hero h1{font-size:clamp(39px,11vw,58px)}.hero-lead{font-size:14px}.hero-visual{height:420px;margin-top:12px}.portrait-frame{height:365px;width:280px}.orbit-one{width:350px}.orbit-two{width:405px}.float-ai{left:0;top:70px}.float-data{right:0;bottom:65px}.hero-bottom{margin:25px 0 0}.about-grid,.skills-layout,.education-layout,.contact-panel{grid-template-columns:1fr}.about-photo-wrap{max-width:330px;margin:auto}.about-photo{height:370px}.about-facts{grid-template-columns:1fr 1fr 1fr}.skills-layout{gap:22px}.skill-groups{gap:20px}.timeline{margin-left:10px;padding-left:24px}.timeline-marker{left:-38px}.timeline-top{flex-direction:column}.date-pill{align-self:flex-start}.timeline-card{padding:20px}.project-grid,.cert-grid{grid-template-columns:1fr}.project-card{min-height:0}.campus-large{height:210px}.campus-small{height:140px}.cert-summary{align-items:flex-start;gap:10px;flex-direction:column}.contact-panel{padding:24px}.footer{flex-wrap:wrap;gap:15px}.footer>p{width:100%;order:3}.copyright{width:100%;order:4}.certificate-modal{height:92vh}.modal-head h3{font-size:14px}}
 @media(max-width:420px){.hero-buttons{flex-direction:column;align-items:stretch}.hero-meta{flex-wrap:wrap}.about-facts{grid-template-columns:1fr}.skill-groups{grid-template-columns:1fr}.campus-caption{font-size:7px}.modal-foot{gap:10px}.modal-foot>span{font-size:8px}}
+
+
+/* =========================================================
+   FUTURISTIC AI + 3D CINEMATIC HERO ENHANCEMENT
+   Lightweight canvas animation; no external video or library.
+   ========================================================= */
+.hero{isolation:isolate;overflow:hidden}
+.neural-scene{position:absolute;inset:-5% -7%;z-index:0;pointer-events:none;overflow:hidden;opacity:.92;perspective:1000px}
+.neural-scene canvas{position:absolute;inset:0;width:100%;height:100%}
+.scene-glow{position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0%,color-mix(in srgb,var(--bg) 72%,transparent) 35%,transparent 72%),linear-gradient(0deg,var(--bg) 0%,transparent 26%,transparent 78%,var(--bg) 100%)}
+.hero-grid,.hero-bottom{position:relative;z-index:1}
+.hero-visual{transform-style:preserve-3d}
+.portrait-frame{transform:perspective(1100px) rotateY(-7deg) rotateX(2deg);animation:portraitFloat 7s ease-in-out infinite;transition:transform .5s,box-shadow .5s}
+.portrait-frame:hover{transform:perspective(1100px) rotateY(0) rotateX(0) translateY(-7px);box-shadow:0 0 0 10px rgba(63,137,255,.07),0 0 95px rgba(40,139,255,.28)}
+.orbit-one{transform:rotateX(68deg) rotateY(-18deg);animation:orbitTurn 24s linear infinite}
+.orbit-two{transform:rotateX(72deg) rotateY(26deg);animation:orbitTurnReverse 32s linear infinite}
+.float-card{animation:floatDepth 6s ease-in-out infinite;transform:translateZ(35px)}
+.float-data{animation-delay:-3s}
+.hero-copy>*{animation:heroRise .8s both;}
+.hero-copy>.eyebrow{animation-delay:.08s}.hero-copy>h1{animation-delay:.18s}.hero-copy>.hero-lead{animation-delay:.28s}.hero-copy>.hero-tags{animation-delay:.38s}.hero-copy>.hero-buttons{animation-delay:.48s}.hero-copy>.hero-meta{animation-delay:.58s}
+.project-card,.cert-card,.timeline-card,.fact,.skills-intro,.education-main{transition:transform .35s ease,border-color .35s ease,box-shadow .35s ease}
+.project-card:hover,.cert-card:hover,.timeline-card:hover{transform:translateY(-6px);border-color:rgba(53,213,232,.42);box-shadow:0 18px 50px rgba(0,0,0,.2)}
+@keyframes portraitFloat{0%,100%{transform:perspective(1100px) rotateY(-7deg) rotateX(2deg) translateY(0)}50%{transform:perspective(1100px) rotateY(-3deg) rotateX(0) translateY(-9px)}}
+@keyframes orbitTurn{from{transform:rotateX(68deg) rotateY(-18deg) rotateZ(0)}to{transform:rotateX(68deg) rotateY(-18deg) rotateZ(360deg)}}
+@keyframes orbitTurnReverse{from{transform:rotateX(72deg) rotateY(26deg) rotateZ(360deg)}to{transform:rotateX(72deg) rotateY(26deg) rotateZ(0)}}
+@keyframes floatDepth{0%,100%{translate:0 0}50%{translate:0 -10px}}
+@keyframes heroRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){.neural-scene{inset:0 -35%;opacity:.62}.scene-glow{background:linear-gradient(90deg,var(--bg) 0%,transparent 42%,transparent 75%,var(--bg) 100%),linear-gradient(0deg,var(--bg) 0%,transparent 30%,var(--bg) 100%)}.hero-visual{transform:none}.portrait-frame{transform:none;animation:portraitFloat 7s ease-in-out infinite}.orbit-one{transform:rotateX(68deg)}.orbit-two{transform:rotateX(72deg)}}
+@media(prefers-reduced-motion:reduce){.portrait-frame,.orbit-one,.orbit-two,.float-card,.hero-copy>*{animation:none!important;transition:none!important}.neural-scene{opacity:.45}}
