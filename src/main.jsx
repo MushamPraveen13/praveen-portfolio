@@ -42,7 +42,7 @@ function GitHubIcon({ size = 17, ...props }) {
   );
 }
 
-const A = "/assets";
+const A = `${import.meta.env.BASE_URL}assets`;
 const profile = `${A}/images/profile-photo.png`;
 
 const skills = [
