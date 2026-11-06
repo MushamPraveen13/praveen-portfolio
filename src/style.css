@@ -75,4 +75,3 @@ html{scroll-behavior:smooth}
   .page-progress span,.portrait-frame,.portrait-frame:after,.orbit-one,.orbit-two,.float-card,.hero-visual:after,.hero-bottom svg{animation:none!important}
   [data-reveal="true"]{opacity:1;transform:none;filter:none;transition:none}
 }
-
