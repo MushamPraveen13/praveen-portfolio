@@ -284,7 +284,14 @@ function App(){
             <div className="hero-tags"><span>Machine Learning</span><span>Data Analytics</span><span>AI Technologies</span></div>
             <div className="hero-buttons">
               <button className="btn btn-primary" onClick={()=>go("projects")}>Explore my work <ArrowRight size={17}/></button>
-              <button className="btn btn-ghost" onClick={()=>go("contact")}>Get in touch <ArrowUpRight size={17}/></button><a className="btn btn-ghost" href="/resume.html" target="_blank" rel="noreferrer">View resume <FileText size={16}/></a>
+             <a
+  className="btn btn-ghost"
+  href="./resume.html"
+  target="_blank"
+  rel="noreferrer"
+>
+  View Resume <FileText size={16}/>
+</a>
             </div>
             <div className="hero-meta"><span><MapPin size={15}/> Hyderabad, India</span><span className="meta-separator"></span><span className="availability"><i></i> Open to graduate opportunities</span></div>
           </div>
