@@ -197,56 +197,65 @@ function App(){
   useEffect(()=>{
     document.documentElement.dataset.theme = dark ? "dark" : "light";
     const sections = ["home","about","skills","experience","projects","education","certifications","contact"];
-    const observer = new IntersectionObserver(entries=>{
+    const activeObserver = new IntersectionObserver(entries=>{
       entries.forEach(entry=>{if(entry.isIntersecting) setActive(entry.target.id);});
     },{rootMargin:"-35% 0px -55% 0px"});
-    sections.forEach(id=>{const el=document.getElementById(id); if(el) observer.observe(el);});
+    sections.forEach(id=>{const el=document.getElementById(id); if(el) activeObserver.observe(el);});
 
-    // Reveal content in cinematic, staggered beats as each section enters the viewport.
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const revealTargets = document.querySelectorAll(
-      ".section-heading, .about-photo-wrap, .about-content, .skills-intro, .skill-group, .timeline-item, .project-card, .education-main, .campus-gallery, .cert-summary, .cert-card, .contact-copy, .contact-form"
+    // Every major content block is driven by scroll position, like a scrubbed film sequence.
+    const cinematicTargets = document.querySelectorAll(
+      ".section-heading, .about-photo-wrap, .about-content, .about-facts .fact, .social-row, .skills-intro, .skill-group, .timeline-item, .project-card, .education-main, .campus-image, .campus-caption, .cert-summary, .filter-row, .cert-card, .cert-footnote, .contact-copy, .contact-form, .footer"
     );
-    revealTargets.forEach((el, index) => {
-      el.dataset.reveal = "true";
-      el.style.setProperty("--reveal-delay", `${(index % 4) * 85}ms`);
-      if (reduceMotion) el.classList.add("is-visible");
+    cinematicTargets.forEach((el,index)=>{
+      el.dataset.cinematic = "true";
+      el.style.setProperty("--cinematic-delay", `${(index % 5) * 45}ms`);
     });
-    const revealObserver = reduceMotion ? null : new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: "0px 0px -7% 0px" });
-    if (revealObserver) revealTargets.forEach(el => revealObserver.observe(el));
 
-    let scrollFrame = 0;
-    const updateScrollMotion = () => {
-      if (scrollFrame) return;
-      scrollFrame = requestAnimationFrame(() => {
-        scrollFrame = 0;
-        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
-        document.documentElement.style.setProperty("--page-progress", `${progress * 100}%`);
-        document.querySelectorAll(".section-pad").forEach(section => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let raf = 0;
+    const clamp = value => Math.min(1,Math.max(0,value));
+    const updateCinematicScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(()=>{
+        raf = 0;
+        const root = document.documentElement;
+        const maxScroll = Math.max(1,root.scrollHeight-window.innerHeight);
+        const overall = clamp(window.scrollY/maxScroll);
+        root.style.setProperty("--page-progress",`${overall*100}%`);
+        root.style.setProperty("--scroll-velocity",`${Math.min(1,Math.abs(window.scrollY-(updateCinematicScroll.lastY||0))/90)}`);
+        updateCinematicScroll.lastY = window.scrollY;
+
+        document.querySelectorAll("main > section").forEach((section,index)=>{
           const rect = section.getBoundingClientRect();
-          const travel = Math.max(1, window.innerHeight + rect.height);
-          const localProgress = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / travel));
-          section.style.setProperty("--section-progress", localProgress.toFixed(3));
+          const span = Math.max(1,window.innerHeight+rect.height);
+          const progress = clamp((window.innerHeight-rect.top)/span);
+          section.style.setProperty("--scene-progress",progress.toFixed(4));
+          section.style.setProperty("--scene-opacity",(0.12+progress*0.2).toFixed(3));
+          section.style.setProperty("--scene-scale",(0.9+progress*0.12).toFixed(3));
+          section.style.setProperty("--scene-index",index);
+        });
+        if (!reduceMotion) cinematicTargets.forEach(el=>{
+          const rect = el.getBoundingClientRect();
+          const travel = Math.max(1,window.innerHeight+rect.height*.7);
+          const progress = clamp((window.innerHeight-rect.top)/travel);
+          el.style.setProperty("--cinematic-progress",progress.toFixed(4));
+          el.style.setProperty("--cinematic-offset",`${(1-progress)*(el.matches(".section-heading")?58:46)}px`);
+          el.style.setProperty("--cinematic-tilt",`${(1-progress)*(el.matches(".project-card,.cert-card,.skill-group,.timeline-item")?8:5)}deg`);
+          el.style.setProperty("--cinematic-negative-tilt",`${-(1-progress)*5}deg`);
+          el.style.setProperty("--cinematic-scale",(0.94+progress*0.06).toFixed(3));
+          el.style.setProperty("--cinematic-blur",`${(1-progress)*5}px`);
+          el.style.setProperty("--cinematic-opacity",(0.18+progress*0.82).toFixed(3));
         });
       });
     };
-    updateScrollMotion();
-    window.addEventListener("scroll", updateScrollMotion, { passive: true });
-    window.addEventListener("resize", updateScrollMotion);
+    updateCinematicScroll();
+    window.addEventListener("scroll",updateCinematicScroll,{passive:true});
+    window.addEventListener("resize",updateCinematicScroll);
     return ()=>{
-      observer.disconnect();
-      revealObserver?.disconnect();
-      cancelAnimationFrame(scrollFrame);
-      window.removeEventListener("scroll", updateScrollMotion);
-      window.removeEventListener("resize", updateScrollMotion);
+      activeObserver.disconnect();
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll",updateCinematicScroll);
+      window.removeEventListener("resize",updateCinematicScroll);
     };
   },[dark]);
 
@@ -284,14 +293,7 @@ function App(){
             <div className="hero-tags"><span>Machine Learning</span><span>Data Analytics</span><span>AI Technologies</span></div>
             <div className="hero-buttons">
               <button className="btn btn-primary" onClick={()=>go("projects")}>Explore my work <ArrowRight size={17}/></button>
-             <a
-  className="btn btn-ghost"
-  href="./resume.html"
-  target="_blank"
-  rel="noreferrer"
->
-  View Resume <FileText size={16}/>
-</a>
+              <button className="btn btn-ghost" onClick={()=>go("contact")}>Get in touch <ArrowUpRight size={17}/></button><a className="btn btn-ghost" href={`${import.meta.env.BASE_URL}resume.html`} target="_blank" rel="noreferrer">View resume <FileText size={16}/></a>
             </div>
             <div className="hero-meta"><span><MapPin size={15}/> Hyderabad, India</span><span className="meta-separator"></span><span className="availability"><i></i> Open to graduate opportunities</span></div>
           </div>
